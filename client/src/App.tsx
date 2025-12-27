@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./App.module.scss";
 
 import { Header } from "./components/Header/Header.tsx";
@@ -13,7 +14,7 @@ const icon = (
   </svg>
 );
 
-function App() {
+export const App: React.FC = () => {
   return (
     <div className={styles.app}>
       <div className={styles.container}>
@@ -124,5 +125,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
