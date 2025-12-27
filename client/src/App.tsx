@@ -28,9 +28,12 @@ function App() {
         </div>
 
         <main className={"tasksAppContainer"}>
-          <div className="tasksInfo">
-            <h2 className={"totalTasks"}>Total Tasks: 3</h2>
-            <button className={"button deleteAllButton"}>Delete All</button>
+          <div className={styles.tasksInfo}>
+            <div className={styles.totalTasksContainer}>
+              <h2 className={styles.totalTasksHeading}>Total Tasks: </h2>
+              <span className={styles.totalTasksCount}>3</span>
+            </div>
+            <CustomButton buttonType={"transparent"}>Delete All</CustomButton>
           </div>
           <ul className={"tasks"}>
             <li className={"task completed"}>
