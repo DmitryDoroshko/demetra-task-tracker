@@ -1,0 +1,91 @@
+/* The main container */
+.checkboxWrapper {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+/* The clickable label area */
+.customCheckboxLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none; /* Prevents text selection on click */
+}
+
+/* The custom-styled box */
+.customCheckboxBox {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #666;
+  border-radius: 4px;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+/* The label text */
+.customCheckboxText {
+  font-size: 1.6rem;
+
+  &.active {
+    text-decoration: line-through;
+  }
+}
+
+/* The checkmark (SVG) - hidden by default */
+.customCheckboxCheckmark {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+/*
+ * --- State logic grouped with the input ---
+ * We use SCSS nesting to tie state styles to the input
+ */
+.customCheckboxInput {
+  /* Visually hide the actual checkbox input */
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  cursor: pointer;
+
+  /* 1. When the input is CHECKED */
+  /* Selects the label, box, and checkmark when the input is checked */
+  &:checked + .customCheckboxLabel {
+    .customCheckboxBox {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .customCheckboxCheckmark {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  /* 2. Add a focus ring for accessibility (when tabbing) */
+  &:focus + .customCheckboxLabel {
+    .customCheckboxBox {
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4);
+    }
+  }
+
+  /* 3. Style for the DISABLED state */
+  &:disabled + .customCheckboxLabel {
+    cursor: not-allowed;
+    color: #999;
+
+    .customCheckboxBox {
+      background-color: #f0f0f0;
+      border-color: #ccc;
+    }
+  }
+}

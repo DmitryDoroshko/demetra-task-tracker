@@ -1,0 +1,1 @@
+export const API_TASKS_URL = "http://localhost:3000/api/tasks";

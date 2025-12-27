@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./App.module.scss";
 
 import { Header } from "./components/Header/Header.tsx";
 import { CustomInput } from "./components/CustomInput/CustomInput.tsx";
 import { CustomButton } from "./components/CustomButton/CustomButton.tsx";
 import { TasksInfoAndActions } from "./components/TasksInfoAndActions/TasksInfoAndActions.tsx";
+import { Task } from "./components/Task/Task.tsx";
+import type { ITask } from "./shared/types.ts";
+import { API_TASKS_URL } from "./shared/constants.ts";
 
 const icon = (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,6 +18,39 @@ const icon = (
 );
 
 export const App: React.FC = () => {
+  const [tasks, setTasks] = useState<ITask[]>([]);
+
+  const handleTaskCompletionToggle = (taskId: string): void => {
+    const taskFound = tasks.find(task => task.task_id === taskId);
+
+    if (!taskFound) {
+      console.log("No task found for task id " + taskId);
+      return;
+    }
+
+    setTasks(prevTasks => prevTasks.map(task => {
+      if (task.task_id === taskFound.task_id) {
+        return { ...taskFound, is_completed: !taskFound.is_completed };
+      }
+      return task;
+    }));
+  };
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const response = await fetch(API_TASKS_URL);
+      const tasksFetched = await response.json();
+      setTasks(tasksFetched);
+    };
+
+    fetchTasks();
+  }, []);
+
+  const renderedTasks = (tasks || []).map((task: ITask) => (
+    <Task key={task.task_id} completed={task.is_completed} title={task.title} description={task.description}
+          id={task.task_id} onToggleCompleted={(id) => handleTaskCompletionToggle(id)} />
+  ));
+
   return (
     <div className={styles.app}>
       <div className={styles.container}>
@@ -31,97 +67,11 @@ export const App: React.FC = () => {
 
         <main className={styles.tasksAppContainer}>
           <TasksInfoAndActions />
-          <ul className={"tasks"}>
-            <li className={"task completed"}>
-              <div className="taskInner">
-                <div className="taskLeft">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.3334 4L6.00002 11.3333L2.66669 8" stroke="#F5F5F5" strokeWidth="1.6"
-                          strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <div className="taskTexts">
-                    <p className={"taskTitle"}>Task 1</p>
-                    <p className={"taskDescription"}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias architecto at corporis dolorem
-                      facilis ipsum
-                    </p>
-                  </div>
-                </div>
-                <div className="taskRight">
-                  <button>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15 5L5 15M5 5L15 15" stroke="#757575" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </li>
-            <li className={"task completed"}>
-              <div className="taskInner">
-                <div className="taskLeft">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.3334 4L6.00002 11.3333L2.66669 8" stroke="#F5F5F5" stroke-width="1.6"
-                          stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                  <div className="taskTexts">
-                    <p className={"taskTitle"}>Task 2</p>
-                    <p className={"taskDescription"}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias architecto at corporis dolorem
-                      facilis ipsum
-                    </p>
-                  </div>
-                </div>
-                <div className="taskRight">
-                  <button>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15 5L5 15M5 5L15 15" stroke="#757575" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </li>
-            <li className={"task"}>
-              <div className="taskInner">
-                <div className="taskLeft">
-                  <svg
-                    width="12"
-                    height="10"
-                    viewBox="0 0 12 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M1 4.5L4.5 8L11 1"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <div className="taskTexts">
-                    <p className={"taskTitle"}>Task 1</p>
-                    <p className={"taskDescription"}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias architecto at corporis dolorem
-                      facilis ipsum
-                    </p>
-                  </div>
-                </div>
-                <div className="taskRight">
-                  <button>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15 5L5 15M5 5L15 15" stroke="#757575" strokeWidth="2" strokeLinecap="round"
-                            strokeLinejoin="round" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </li>
+          <ul className={styles.tasks}>
+            {renderedTasks}
           </ul>
         </main>
-
       </div>
     </div>
   );
-}
+};

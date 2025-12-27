@@ -3,12 +3,12 @@ import classNames from "classnames";
 
 import styles from "./CustomButton.module.scss";
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface CustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   buttonType: "primary" | "transparent";
 }
 
-export const CustomButton: React.FC<Props> = ({ children, buttonType, ...otherProps }) => {
+export const CustomButton: React.FC<CustomButtonProps> = ({ children, buttonType, ...otherProps }) => {
 
   const classes = classNames([
       styles.button,
