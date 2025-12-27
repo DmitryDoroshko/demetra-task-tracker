@@ -3,6 +3,7 @@ import styles from "./App.module.scss";
 import { Header } from "./components/Header/Header.tsx";
 import { CustomInput } from "./components/CustomInput/CustomInput.tsx";
 import { CustomButton } from "./components/CustomButton/CustomButton.tsx";
+import { TasksInfoAndActions } from "./components/TasksInfoAndActions/TasksInfoAndActions.tsx";
 
 const icon = (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,18 +24,12 @@ function App() {
                        placeholder={"New task title"} />
           <CustomButton type={"button"} buttonType={"primary"}>Add</CustomButton>
         </div>
-        <div className="actionsRow marginBottom24">
+        <div className="actionsRow">
           <CustomInput icon={icon} placeholder={"Search task"} />
         </div>
 
-        <main className={"tasksAppContainer"}>
-          <div className={styles.tasksInfo}>
-            <div className={styles.totalTasksContainer}>
-              <h2 className={styles.totalTasksHeading}>Total Tasks: </h2>
-              <span className={styles.totalTasksCount}>3</span>
-            </div>
-            <CustomButton buttonType={"transparent"}>Delete All</CustomButton>
-          </div>
+        <main className={styles.tasksAppContainer}>
+          <TasksInfoAndActions />
           <ul className={"tasks"}>
             <li className={"task completed"}>
               <div className="taskInner">
