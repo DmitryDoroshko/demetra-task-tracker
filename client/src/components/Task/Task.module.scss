@@ -1,8 +1,19 @@
-.task {}
+.task {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 12px 10px;
+  width: 356px;
+  height: fit-content;
+  list-style-type: none;
+}
 
 .completed {}
 
-.taskInner {}
+.taskInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .taskLeft {}
 
@@ -10,8 +21,23 @@
 
 .taskTexts {}
 
-.taskTitle {}
+.taskTitle {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 140%;
+  color: #1e1e1e;
+}
 
-.taskDescription {}
+.taskDescription {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 1.4rem;
+  color: #1e1e1e;
+}
 
-.taskDeleteButton {}
+.taskDeleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
