@@ -7,7 +7,7 @@ import { CustomButton } from "./components/CustomButton/CustomButton.tsx";
 import { TasksInfoAndActions } from "./components/TasksInfoAndActions/TasksInfoAndActions.tsx";
 import { Task } from "./components/Task/Task.tsx";
 import type { ITask } from "./shared/types.ts";
-import { API_TASKS_URL } from "./shared/constants.ts";
+import tasksService from "./services/tasks.service.ts";
 
 const icon = (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,6 +19,13 @@ const icon = (
 
 export const App: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
+  const [newEnteredTaskTitle, setNewEnteredTaskTitle] = useState<string>("");
+  const [newEnteredTaskDescription, setNewEnteredTaskDescription] = useState<string>("");
+
+  const resetEnteredTaskFields = () => {
+    setNewEnteredTaskTitle("");
+    setNewEnteredTaskDescription("");
+  };
 
   const handleTaskCompletionToggle = (taskId: string): void => {
     const taskFound = tasks.find(task => task.task_id === taskId);
@@ -38,17 +45,60 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const response = await fetch(API_TASKS_URL);
-      const tasksFetched = await response.json();
+      const tasksFetched = await tasksService.getTasks();
       setTasks(tasksFetched);
     };
 
     fetchTasks();
   }, []);
 
+  const handleNewTaskTitleChange = (newTaskTitle: string) => {
+    setNewEnteredTaskTitle(newTaskTitle);
+  };
+
+  const handleNewEnteredTaskDescriptionChange = (newEnteredTaskDescription: string) => {
+    setNewEnteredTaskDescription(newEnteredTaskDescription);
+  };
+
+  const handleAddNewTask = async () => {
+    try {
+      const newTaskToBeAdded = {
+        title: newEnteredTaskTitle,
+        description: newEnteredTaskDescription,
+        is_completed: false,
+      };
+
+      const resultTask = await tasksService.createTask(newTaskToBeAdded);
+      setTasks(prevTasks => [resultTask, ...prevTasks]);
+      resetEnteredTaskFields();
+      console.log("Task created", resultTask);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    const taskFound = tasks.find(task => task.task_id === taskId);
+
+    if (!taskFound) {
+      console.error("No task found for task id " + taskId);
+      return;
+    }
+
+    const taskDeleted = await tasksService.deleteTask(taskFound.task_id);
+
+    if (!taskDeleted) {
+      console.error("No task deleted for task id " + taskId);
+      return;
+    }
+
+    setTasks(prevTasks => prevTasks.filter(task => task.task_id !== taskDeleted.task_id));
+  };
+
   const renderedTasks = (tasks || []).map((task: ITask) => (
     <Task key={task.task_id} completed={task.is_completed} title={task.title} description={task.description}
-          id={task.task_id} onToggleCompleted={(id) => handleTaskCompletionToggle(id)} />
+          id={task.task_id} onToggleCompleted={(id) => handleTaskCompletionToggle(id)}
+          onDelete={() => handleDeleteTask(task.task_id)} />
   ));
 
   return (
@@ -58,11 +108,29 @@ export const App: React.FC = () => {
         <div className={styles.actionsRowFlex}>
           <CustomInput style={{ flex: 1, marginBottom: "2.4rem" }}
                        name={"taskTitle"}
-                       placeholder={"New task title"} />
-          <CustomButton type={"button"} buttonType={"primary"}>Add</CustomButton>
+                       placeholder={"New task title"}
+                       value={newEnteredTaskTitle}
+                       onInputChange={handleNewTaskTitleChange}
+          />
+        </div>
+        <div className={styles.actionsRowFlex}>
+          <CustomInput style={{ flex: 1, marginBottom: "2.4rem" }}
+                       name={"taskDescription"}
+                       placeholder={"New task description"}
+                       value={newEnteredTaskDescription}
+                       onInputChange={handleNewEnteredTaskDescriptionChange}
+                       multipleRows={true}
+          />
+          <CustomButton type={"button"}
+                        buttonType={"primary"}
+                        onClick={handleAddNewTask}>Add</CustomButton>
         </div>
         <div className="actionsRow">
-          <CustomInput icon={icon} placeholder={"Search task"} />
+          <CustomInput icon={icon}
+                       placeholder={"Search task"}
+                       onInputChange={() => {
+                         // TODO: Make this work
+                       }} />
         </div>
 
         <main className={styles.tasksAppContainer}>

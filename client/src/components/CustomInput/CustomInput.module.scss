@@ -30,3 +30,9 @@
   right: 1.2rem;
   cursor: pointer;
 }
+
+.textarea {
+  resize: none;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
