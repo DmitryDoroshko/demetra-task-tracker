@@ -101,14 +101,22 @@ export const App: React.FC = () => {
   };
 
   const handleDeleteAllTasks = async () => {
-    setTasks([]);
-    const response = await tasksService.deleteAllTasks();
-    console.log({ response });
+    try {
+      const response = await tasksService.deleteAllTasks();
+      setTasks([]);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const renderedTasks = (tasks || []).map((task: ITask) => (
-    <Task key={task.task_id} completed={task.is_completed} title={task.title} description={task.description}
-          id={task.task_id} onToggleCompleted={(id) => handleTaskCompletionToggle(id)}
+    <Task key={task.task_id}
+          completed={task.is_completed}
+          title={task.title}
+          description={task.description}
+          id={task.task_id}
+          onToggleCompleted={(id) => handleTaskCompletionToggle(id)}
           onDelete={() => handleDeleteTask(task.task_id)} />
   ));
 
@@ -151,7 +159,7 @@ export const App: React.FC = () => {
             {renderedTasks}
           </ul>
           <div className={styles.noTasksContainer}>
-          {totalTasks === 0 && <p className={styles.noTasksText}>No tasks available. Please add some.</p>}
+            {totalTasks === 0 && <p className={styles.noTasksText}>No tasks available. Please add some.</p>}
           </div>
         </main>
       </div>
