@@ -100,11 +100,19 @@ export const App: React.FC = () => {
     setTasks(prevTasks => prevTasks.filter(task => task.task_id !== taskDeleted.task_id));
   };
 
+  const handleDeleteAllTasks = async () => {
+    setTasks([]);
+    const response = await tasksService.deleteAllTasks();
+    console.log({ response });
+  };
+
   const renderedTasks = (tasks || []).map((task: ITask) => (
     <Task key={task.task_id} completed={task.is_completed} title={task.title} description={task.description}
           id={task.task_id} onToggleCompleted={(id) => handleTaskCompletionToggle(id)}
           onDelete={() => handleDeleteTask(task.task_id)} />
   ));
+
+  const totalTasks = tasks.length;
 
   return (
     <div className={styles.app}>
@@ -138,7 +146,7 @@ export const App: React.FC = () => {
         </div>
 
         <main className={styles.tasksAppContainer}>
-          <TasksInfoAndActions />
+          <TasksInfoAndActions totalTasks={totalTasks} onDeleteAllTasks={handleDeleteAllTasks} />
           <ul className={styles.tasks}>
             {renderedTasks}
           </ul>

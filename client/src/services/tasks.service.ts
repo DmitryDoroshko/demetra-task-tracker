@@ -53,6 +53,15 @@ class TasksService {
     return task;
   }
 
+  public async deleteAllTasks(): Promise<ITask[]> {
+    const response = await fetch(`${API_TASKS_URL}`, { method: "DELETE" });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const tasks = await response.json();
+    return tasks;
+  }
+
   public async updateTask(id: string, task: Omit<ITask, "task_id">): Promise<ITask> {
     const response = await fetch(`${API_TASKS_URL}/${id}`, {
       method: "PUT",

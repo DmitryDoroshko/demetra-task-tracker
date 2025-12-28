@@ -49,5 +49,11 @@ export class TaskService {
 
     return result.rows[0];
   }
+
+  public async deleteAllTasks() {
+    const result = await pool.query("DELETE FROM tasks RETURNING *");
+    console.log(`Attempted to delete all tasks with ID: ${result.rowCount}`);
+    return result.rows;
+  }
 }
 

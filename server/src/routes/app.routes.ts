@@ -14,4 +14,5 @@ export default function routes(app: Express) {
   app.get("/api/tasks/:id", taskController.getTaskById);
   app.put("/api/tasks/:id", taskController.updateTask);
   app.delete("/api/tasks/:id", taskController.deleteTask);
+  app.delete("/api/tasks", taskController.deleteAllTasks);
 }

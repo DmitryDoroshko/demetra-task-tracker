@@ -101,4 +101,13 @@ export class TaskController {
       next(e);
     }
   };
+
+  public deleteAllTasks = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await this.taskService.deleteAllTasks();
+      res.status(200).json([]);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
