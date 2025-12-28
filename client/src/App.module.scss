@@ -24,3 +24,20 @@
   flex-direction: column;
   gap: .8rem;
 }
+
+.noTasksContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.noTasksText {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 140%;
+  color: #000;
+  text-align: center;
+  max-width: 20.4rem;
+}

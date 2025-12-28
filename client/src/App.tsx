@@ -150,6 +150,9 @@ export const App: React.FC = () => {
           <ul className={styles.tasks}>
             {renderedTasks}
           </ul>
+          <div className={styles.noTasksContainer}>
+          {totalTasks === 0 && <p className={styles.noTasksText}>No tasks available. Please add some.</p>}
+          </div>
         </main>
       </div>
     </div>
