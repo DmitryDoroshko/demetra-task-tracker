@@ -21,6 +21,7 @@ export const App: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [newEnteredTaskTitle, setNewEnteredTaskTitle] = useState<string>("");
   const [newEnteredTaskDescription, setNewEnteredTaskDescription] = useState<string>("");
+  const [newEnteredSearchTaskInput, setNewEnteredSearchTaskInput] = useState<string>("");
 
   const resetEnteredTaskFields = () => {
     setNewEnteredTaskTitle("");
@@ -58,6 +59,10 @@ export const App: React.FC = () => {
 
   const handleNewEnteredTaskDescriptionChange = (newEnteredTaskDescription: string) => {
     setNewEnteredTaskDescription(newEnteredTaskDescription);
+  };
+
+  const handleSearchTaskInputChange = (newEnteredSearchTaskInput: string) => {
+    setNewEnteredSearchTaskInput(newEnteredSearchTaskInput);
   };
 
   const handleAddNewTask = async () => {
@@ -128,9 +133,8 @@ export const App: React.FC = () => {
         <div className="actionsRow">
           <CustomInput icon={icon}
                        placeholder={"Search task"}
-                       onInputChange={() => {
-                         // TODO: Make this work
-                       }} />
+                       value={newEnteredSearchTaskInput}
+                       onInputChange={handleSearchTaskInputChange} />
         </div>
 
         <main className={styles.tasksAppContainer}>

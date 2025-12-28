@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, useState } from "react";
+import React, { type ChangeEvent } from "react";
 import styles from "./CustomInput.module.scss";
 import classNames from "classnames";
 
@@ -6,6 +6,7 @@ interface BaseProps {
   icon?: React.ReactNode;
   onInputChange: (value: string) => void;
   multipleRows?: boolean;
+  value: string;
 }
 
 type CustomInputProps = BaseProps & (
@@ -21,14 +22,11 @@ export const CustomInput: React.FC<CustomInputProps> = (
     placeholder,
     onInputChange,
     multipleRows,
+    value,
     ...otherProps
   }) => {
-  const [inputValue, setInputValue] = useState<string>("");
-
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const enteredInput = (e.target as HTMLInputElement).value;
-
-    setInputValue(enteredInput);
     onInputChange(enteredInput);
   };
 
@@ -40,7 +38,7 @@ export const CustomInput: React.FC<CustomInputProps> = (
           name={name}
           className={classNames(styles.input, styles.textarea)}
           placeholder={placeholder}
-          value={inputValue}
+          value={value}
           onChange={handleInputChange}
           rows={5}
         />
@@ -55,7 +53,7 @@ export const CustomInput: React.FC<CustomInputProps> = (
         {...(otherProps as React.InputHTMLAttributes<HTMLInputElement>)}
         type="text"
         className={styles.input}
-        value={inputValue}
+        value={value}
         onChange={handleInputChange}
         name={name}
         placeholder={placeholder}
