@@ -49,15 +49,6 @@ export const App: React.FC = () => {
     console.log("Updated Task Result", updatedTaskResult);
   };
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const tasksFetched = await tasksService.getTasks();
-      setTasks(tasksFetched);
-    };
-
-    fetchTasks();
-  }, []);
-
   const handleNewTaskTitleChange = (newTaskTitle: string) => {
     setNewEnteredTaskTitle(newTaskTitle);
   };
@@ -115,7 +106,27 @@ export const App: React.FC = () => {
     }
   };
 
-  const renderedTasks = (tasks || []).map((task: ITask) => (
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const tasksFetched = await tasksService.getTasks();
+      setTasks(tasksFetched);
+    };
+
+    fetchTasks();
+  }, []);
+
+  const filteredTasks = tasks.filter(task => {
+    const search = newEnteredSearchTaskInput.trim().toLowerCase();
+
+    if (!search) {
+      return true;
+    }
+
+    return task.title.trim().includes(search)
+      || task.description.trim().includes(search);
+  });
+
+  const renderedTasks = (filteredTasks || []).map((task: ITask) => (
     <Task key={task.task_id}
           completed={task.is_completed}
           title={task.title}
