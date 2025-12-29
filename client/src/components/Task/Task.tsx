@@ -14,11 +14,20 @@ type TaskProps = {
   id: string;
 };
 
-export const Task: React.FC<TaskProps> = ({ completed, title, description, onDelete, id }) => {
+export const Task: React.FC<TaskProps> = (
+  {
+    completed,
+    title,
+    description,
+    onDelete,
+    id,
+    onToggleCompleted,
+  }) => {
   const [isCompleted, setIsCompleted] = useState(completed);
 
   const toggleCompleted = () => {
     setIsCompleted(prev => !prev);
+    onToggleCompleted(id);
   };
 
   const classesMain = classNames([

@@ -28,7 +28,7 @@ export const App: React.FC = () => {
     setNewEnteredTaskDescription("");
   };
 
-  const handleTaskCompletionToggle = (taskId: string): void => {
+  const handleTaskCompletionToggle = async (taskId: string): Promise<void> => {
     const taskFound = tasks.find(task => task.task_id === taskId);
 
     if (!taskFound) {
@@ -42,6 +42,11 @@ export const App: React.FC = () => {
       }
       return task;
     }));
+    const updatedTaskResult = await tasksService.updateTask(taskFound.task_id, {
+      ...taskFound, is_completed: !taskFound.is_completed,
+    });
+
+    console.log("Updated Task Result", updatedTaskResult);
   };
 
   useEffect(() => {
