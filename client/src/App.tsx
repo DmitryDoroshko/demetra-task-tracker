@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./App.module.scss";
 
 import { Header } from "./components/Header/Header.tsx";
@@ -115,16 +115,18 @@ export const App: React.FC = () => {
     fetchTasks();
   }, []);
 
-  const filteredTasks = tasks.filter(task => {
-    const search = newEnteredSearchTaskInput.trim().toLowerCase();
+  const filteredTasks = useMemo(() => {
+    return tasks.filter(task => {
+      const search = newEnteredSearchTaskInput.trim().toLowerCase();
 
-    if (!search) {
-      return true;
-    }
+      if (!search) {
+        return true;
+      }
 
-    return task.title.trim().includes(search)
-      || task.description.trim().includes(search);
-  });
+      return task.title.trim().includes(search)
+        || task.description.trim().includes(search);
+    });
+  }, [tasks, newEnteredSearchTaskInput]);
 
   const renderedTasks = (filteredTasks || []).map((task: ITask) => (
     <Task key={task.task_id}
