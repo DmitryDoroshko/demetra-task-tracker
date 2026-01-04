@@ -38,7 +38,7 @@ export const App: React.FC = () => {
 
     setTasks(prevTasks => prevTasks.map(task => {
       if (task.task_id === taskFound.task_id) {
-        return { ...taskFound, is_completed: !taskFound.is_completed };
+        return { ...task, is_completed: !task.is_completed };
       }
       return task;
     }));
@@ -110,6 +110,7 @@ export const App: React.FC = () => {
     const fetchTasks = async () => {
       const tasksFetched = await tasksService.getTasks();
       setTasks(tasksFetched);
+      console.log({ tasksFetched });
     };
 
     fetchTasks();
@@ -117,14 +118,14 @@ export const App: React.FC = () => {
 
   const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
-      const search = newEnteredSearchTaskInput.trim().toLowerCase();
+      const search = newEnteredSearchTaskInput.toLowerCase().trim();
 
       if (!search) {
         return true;
       }
 
-      return task.title.trim().includes(search)
-        || task.description.trim().includes(search);
+      return task.title.toLowerCase().includes(search)
+        || task.description.toLowerCase().includes(search);
     });
   }, [tasks, newEnteredSearchTaskInput]);
 

@@ -1,5 +1,5 @@
-import {API_TASKS_URL} from "../shared/constants.ts";
-import type {ITask} from "../shared/types.ts";
+import { API_TASKS_URL } from "../shared/constants.ts";
+import type { ITask } from "../shared/types.ts";
 
 class TasksService {
   public async getTasks(): Promise<ITask[]> {
@@ -28,7 +28,7 @@ class TasksService {
         is_completed: task.is_completed,
       }),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
@@ -62,16 +62,16 @@ class TasksService {
     return tasks;
   }
 
-  public async updateTask(id: string, task: Omit<ITask, "task_id">): Promise<ITask> {
+  public async updateTask(id: string, task: Partial<Omit<ITask, "task_id">>): Promise<ITask> {
+    if (Object.keys(task).length === 0) {
+      throw new Error("No data to update provided.");
+    }
+
     const response = await fetch(`${API_TASKS_URL}/${id}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        title: task.title,
-        description: task.description,
-        is_completed: task.is_completed,
-      }),
+      method: "PATCH",
+      body: JSON.stringify(task),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     if (!response.ok) {
