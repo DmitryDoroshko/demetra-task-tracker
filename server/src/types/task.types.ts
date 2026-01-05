@@ -1,12 +1,5 @@
 import { z } from "zod";
 
-export interface ITask {
-  id: string;
-  title: string;
-  description: string;
-  is_completed: boolean;
-}
-
 export const updateTaskSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
@@ -14,3 +7,11 @@ export const updateTaskSchema = z.object({
 });
 
 export type UpdateTaskDto = z.infer<typeof updateTaskSchema>;
+
+export const createTaskSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  is_completed: z.boolean().default(false),
+});
+
+export type CreateTaskDto = z.infer<typeof createTaskSchema>;
