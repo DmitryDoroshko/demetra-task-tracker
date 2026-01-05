@@ -1,7 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 
 import type { TaskService } from "../services/task.service.js";
-import { type UpdateTaskDto, updateTaskSchema } from "../types/task.types.js";
+import { type UpdateTaskDto, type CreateTaskDto, updateTaskSchema } from "../types/task.types.js";
+import type { TypedRequest } from "../types/express.types.js";
 
 export class TaskController {
   private taskService: TaskService;
@@ -10,7 +11,11 @@ export class TaskController {
     this.taskService = taskService;
   }
 
-  public createTask = async (req: Request, res: Response, next: NextFunction) => {
+  public createTask = async (
+    req: Request<{}, {}, CreateTaskDto>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     const { title, description, is_completed } = req.body;
 
     try {
@@ -55,7 +60,7 @@ export class TaskController {
     }
   };
 
-  public updateTask = async (req: Request<{ id: string }, {}, UpdateTaskDto>, res: Response, next: NextFunction) => {
+  public updateTask = async (req: TypedRequest<UpdateTaskDto, { id: string; }>, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const updates = req.body;
 
