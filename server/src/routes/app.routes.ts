@@ -12,7 +12,7 @@ export default function routes(app: Express) {
   app.post("/api/tasks", taskController.createTask);
   app.get("/api/tasks", taskController.getAllTasks);
   app.get("/api/tasks/:id", taskController.getTaskById);
-  app.put("/api/tasks/:id", taskController.updateTask);
+  app.patch("/api/tasks/:id", taskController.updateTask);
   app.delete("/api/tasks/:id", taskController.deleteTask);
   app.delete("/api/tasks", taskController.deleteAllTasks);
 }

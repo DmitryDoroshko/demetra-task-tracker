@@ -1,5 +1,7 @@
-import type { TaskService } from "../services/task.service.js";
 import type { Request, Response, NextFunction } from "express";
+
+import type { TaskService } from "../services/task.service.js";
+import { type UpdateTaskDto, updateTaskSchema } from "../types/task.types.js";
 
 export class TaskController {
   private taskService: TaskService;
@@ -12,7 +14,7 @@ export class TaskController {
     const { title, description, is_completed } = req.body;
 
     try {
-      const newTask = await this.taskService.createTask({ title, description, isCompleted: is_completed });
+      const newTask = await this.taskService.createTask({ title, description, is_completed });
       res.status(201).json(newTask);
     } catch (e) {
       next(e);
@@ -53,25 +55,26 @@ export class TaskController {
     }
   };
 
-  public updateTask = async (req: Request, res: Response, next: NextFunction) => {
+  public updateTask = async (req: Request<{ id: string }, {}, UpdateTaskDto>, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const { title, description, is_completed } = req.body;
+    const updates = req.body;
 
-    if (!id) return res.status(404).json({
-      message: "Id not found",
-    });
+    if (!id) {
+      return res.status(404).json({
+        message: "Id not found",
+      });
+    }
 
-    if (!title && !description && is_completed == null) {
-      res.status(404).json({
+    const parsedUpdates = updateTaskSchema.safeParse(updates);
+
+    if (!parsedUpdates.success) {
+      return res.status(404).json({
         message: "Invalid data provided. Should have (title, description, is_completed).",
       });
     }
+
     try {
-      const updatedTask = await this.taskService.updateTask(id, {
-        title: title,
-        description: description,
-        isCompleted: is_completed,
-      });
+      const updatedTask = await this.taskService.updateTask(id, parsedUpdates.data);
       res.status(200).json(updatedTask);
     } catch (e) {
       next(e);
@@ -109,5 +112,5 @@ export class TaskController {
     } catch (e) {
       next(e);
     }
-  }
+  };
 }
