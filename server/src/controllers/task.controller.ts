@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 
 import type { TaskService } from "../services/task.service.js";
 import { type UpdateTaskDto, type CreateTaskDto, updateTaskSchema } from "../types/task.types.js";
-import type { TypedRequest } from "../types/express.types.js";
+import type { TypedRequest, TypedRequestParams } from "../types/express.types.js";
 
 export class TaskController {
   private taskService: TaskService;
@@ -35,7 +35,7 @@ export class TaskController {
     }
   };
 
-  public getTaskById = async (req: Request, res: Response, next: NextFunction) => {
+  public getTaskById = async (req: TypedRequestParams<{ id: string }>, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     if (!id) {
@@ -86,7 +86,7 @@ export class TaskController {
     }
   };
 
-  public deleteTask = async (req: Request, res: Response, next: NextFunction) => {
+  public deleteTask = async (req: TypedRequestParams<{ id: string }>, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     if (!id) {
