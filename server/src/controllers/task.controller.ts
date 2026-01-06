@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 
 import type { TaskService } from "../services/task.service.js";
-import { type UpdateTaskDto, type CreateTaskDto, updateTaskSchema } from "../types/task.types.js";
-import type { TypedRequest, TypedRequestParams } from "../types/express.types.js";
+import { type UpdateTaskDto, type CreateTaskDto, updateTaskSchema, createTaskSchema } from "../types/task.types.js";
+import type { TypedRequest, TypedRequestBody, TypedRequestParams } from "../types/express.types.js";
 
 export class TaskController {
   private taskService: TaskService;
@@ -12,14 +12,22 @@ export class TaskController {
   }
 
   public createTask = async (
-    req: Request<{}, {}, CreateTaskDto>,
+    req: TypedRequestBody<CreateTaskDto>,
     res: Response,
     next: NextFunction,
   ) => {
-    const { title, description, is_completed } = req.body;
+    const body = req.body;
+
+    const parsedBody = createTaskSchema.safeParse(body);
+
+    if (!parsedBody.success) {
+      return res.status(404).json({
+        message: "Invalid data provided. Should have (title, description).",
+      });
+    }
 
     try {
-      const newTask = await this.taskService.createTask({ title, description, is_completed });
+      const newTask = await this.taskService.createTask(parsedBody.data);
       res.status(201).json(newTask);
     } catch (e) {
       next(e);
