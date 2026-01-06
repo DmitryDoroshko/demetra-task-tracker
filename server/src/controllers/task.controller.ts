@@ -16,18 +16,18 @@ export class TaskController {
     res: Response,
     next: NextFunction,
   ) => {
-    const body = req.body;
+    const requestCreateTaskBody = req.body;
 
-    const parsedBody = createTaskSchema.safeParse(body);
+    const parsedCreateTaskBody = createTaskSchema.safeParse(requestCreateTaskBody);
 
-    if (!parsedBody.success) {
+    if (!parsedCreateTaskBody.success) {
       return res.status(404).json({
         message: "Invalid data provided. Should have (title, description).",
       });
     }
 
     try {
-      const newTask = await this.taskService.createTask(parsedBody.data);
+      const newTask = await this.taskService.createTask(parsedCreateTaskBody.data);
       res.status(201).json(newTask);
     } catch (e) {
       next(e);
